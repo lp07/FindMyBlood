@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="static/css/site.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+
+    <script src="static/js/uikit.min.js"></script>
+    <script src="static/js/uikit-icons.min.js"></script>
+    <title>Find My Blood</title>
+</head>
+<body>
+    <form method="post" action="/signin" id="back">
+        <input type="hidden" value="{{request.session.user.email}}" name="email">
+        <input type="hidden" value="{{request.session.user.password}}" name="password">
+        <button class="uk-position-top-left uk-position-medium" uk-icon="icon: arrow-left; ratio:2" style="fill:white; color: white;"></button>
+    </form>
+    
+
+    <div class="uk-card uk-card-default uk-card-body uk-width-5-6@m uk-align-center uk-text-center round" >
+        <h2 class="uk-text-left">Find My Blood <i class="fas fa-tint" style="color: #951A23;"></i></h2><br>
+        <ul class="uk-list" style="overflow: scroll; max-height: 45vh;">
+            {% for dist, i in donorlist%}
+            <li>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-width-1-1@m uk-text-left round" style="padding:10px;">
+                    <div class="uk-grid-small" uk-grid>
+                        <div class="uk-width-1-6">
+                            <img src="static/images/profile.png" class="profilepic" height="100px" width="100px">
+                        </div>
+                        <div class="uk-width-expand ">
+                            <h3>{{ i.name }}</h3>
+                            <div class=" uk-grid-small" uk-grid>
+                                <div>
+                                    <b style="color: #951A23;">Age :</b> {{ i.age }}
+                                </div>
+                                <div>
+                                    <b><i class="fas fa-venus-mars" style="color: #951A23;"></i> :</b> {{ i.gender }}
+                                </div>
+                                <div>
+                                    <b><i class="fas fa-tint" style="color: #951A23;"></i> :</b> {{ i.bloodgroup }}
+                                </div>
+                                <!-- <div>
+                                    <b style="color: #951A23;">Last Donated :</b> {{ i.lastdonated }}
+                                </div> -->
+                                <div>
+                                    <b><i class="fas fa-location-arrow" style="color: #951A23;"></i> :</b> {{ dist }} Km
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uk-text-align-right uk-width-1-5 uk-align-right">
+                            <ul class="uk-iconnav uk-position-center uk-position-relative ">
+                                
+                                <li class="uk-margin-small-right"><a href="tel:{{ i.phone }}" style="color: #951A23;" class="uk-icon" uk-icon="icon:phone;ratio: 2"></a></li>
+                                <li class="uk-margin-small-right"><a href="sms:{{ i.phone }}" style="color: #951A23;" class="uk-icon" uk-icon="icon:comment;ratio: 2"></a></li>
+                                <li class="uk-margin-small-right">
+                                    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+                                    <form id="sendrequest" method='post' action="sendrequest" target="dummyframe">
+                                        <input type="hidden" name="donorid" value="{{i.id}}">
+                                        <input type="hidden" name="donorname" value="{{i.name}}">
+                                        <input type="hidden" name="requesterid" value="{{user.id}}">
+                                        <input type="hidden" name="requestername" value="{{user.name}}">
+                                        <a href="javascript:()" style="color: #951A23;" class="uk-icon" uk-icon="icon:forward;ratio: 2" onclick="this.closest('form').submit();document.forms[0].submit();"></a>
+                                    </form>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div> 
+                </div>
+            </li>
+            {% endfor %}
+            {% if donorlist %}
+            {% else %}
+                <h4>No donors found for the selected blood group !</h4>
+            {% endif %}
+            
+            
+        </ul>
+        
+
+        
+
+        
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "js/init.js" %}"></script>
+    <script src="{% static "js/script.js" %}"></script>
+    <script src="https://kit.fontawesome.com/e0a08b5c11.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="static/css/site.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <script src="static/js/uikit.min.js"></script>
+    <script src="static/js/uikit-icons.min.js"></script>
+    <title>Forgot My Password:Find My Blood</title>
+</head>
+<body>
+    
+    <a  class="uk-position-top-left uk-position-medium" href="/" uk-icon="icon: arrow-left; ratio:2" style="color:white;"></a>
+
+    <div class="uk-card uk-card-default uk-card-body uk-width-5-6  uk-align-center uk-text-center  round uk-margin-remove-top">
+        <h2 class="uk-text-left">Find My Blood <i class="fas fa-tint" style="color: #951A23;"></i></h2>
+        
+        <div>
+            {% if not otp %}
+            <form action="forgotpassword" method="post">
+                <input class="uk-input uk-text-center uk-form-width-large round" type="email" name="email" placeholder="Email" required> <br><br>
+                <input class="uk-button uk-button-primary round" type="submit" value="Send OTP">
+
+            </form>
+            {% endif %}
+            {% if otp and email %}
+                <form method="post" action="valforgot">
+                    <input type="hidden" value="{{email}}" name="email">
+                    <input class="uk-input uk-text-center uk-form-width-large round" type="text" name="otp" placeholder="OTP" id="otp" required> <span class='message2' uk-icon="check"></span>  <br><br>
+                    <input class="uk-input uk-text-center uk-form-width-large round" type="password" name="pass" placeholder="Enter Password" id="pass" required> <span class='message' uk-icon="check"></span>  <br><br>
+                    <input class="uk-input uk-text-center uk-form-width-large round" type="password" name="pass2" placeholder="Re-enter Password" id="pass2" required> <span class='message' uk-icon="check"></span> <br><br>
+                    <input class="uk-button uk-button-primary round" type="submit" value="Change Password" id="chngpass">
+
+                </form>
+            {% endif %}
+
+        </div>
+        
+
+        
+    </div>
+
+    <script type="text/javascript">
+        var otp = "{{ otp }}";
+    </script>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "js/init.js" %}"></script>
+    <script src="{% static "js/script.js" %}"></script>
+    <script src="https://kit.fontawesome.com/e0a08b5c11.js" crossorigin="anonymous"></script>
+</body>
+</html>

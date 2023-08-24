@@ -1,0 +1,163 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="static/css/site.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <script src="static/js/uikit.min.js"></script>
+    <script src="static/js/uikit-icons.min.js"></script>
+    <title>Home:Find My Blood</title>
+</head>
+<body>
+    <input type="hidden" value="{{user.id}}" id="uid">
+    <a  class="uk-position-top-right uk-position-medium" href="/" uk-icon="icon: sign-out; ratio:2" style="fill:white;"></a>
+
+    <div class="uk-card uk-card-default uk-card-body uk-width-5-6  uk-align-center uk-text-center  round uk-margin-remove-top">
+        <h2 class="uk-text-left">Find My Blood <i class="fas fa-tint" style="color: #951A23;"></i></h2><br>
+        <div class="uk-grid uk-margin-left">
+            <div class="uk-card uk-card-default uk-width-2-5@m uk-width-1-1@s uk-padding">
+                <a class="uk-position-top-right uk-position-medium" uk-icon="icon: pencil; ratio:1.5" href="#editmodal" uk-toggle></a>
+                <span class="uk-badge round uk-position-top-left uk-position-medium">{{ user.type }}</span>
+                <div id="editmodal" uk-modal>
+                    <div class="uk-modal-dialog uk-modal-body round">
+                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                        <h2 class="uk-modal-title">Edit Details</h2>
+                        <form class="uk-text-center" action="signin" method="post" onsubmit="event.preventDefault();">
+                            <div class="uk-inline">
+                                {% if pic %}
+                                    <img src="static/uploads/{{user.id}}.png" class="pic" style="height:150px;width:150px;border-radius: 100px;">
+                                {% else %}
+                                    <img src="static/images/profile.png" class="pic" style="height:150px;width:150px;">
+                                {% endif%}
+                                <div class="uk-overlay uk-light uk-position-bottom uk-padding-remove js-upload" uk-form-custom >
+                                    <input type="file" name="image" accept="image/*" id="id_image">
+                                    <button class="uk-button uk-button-default uk-width-1-1 " style="border:0;"><span uk-icon="upload"></span></button>
+                                </div>
+                                <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+                            </div><br><br>
+                            <!-- <div class="uk-inline" >
+                                <span class="uk-form-icon" uk-icon="icon: phone"></span>
+                                <input class="uk-input uk-text-center uk-form-width-large round" type="tel" name="phone" placeholder="{{user.phone}}"/>
+                            </div><br><br> -->
+                            <button class="uk-button uk-button-primary round" onclick="window.location.reload();">Save</button>
+                        </form>
+                        
+
+                    </div>
+                </div>
+                    {% if pic %}
+                        <img src="static/uploads/{{user.id}}.png" class="profilepic" style="height:150px;width:150px;border-radius: 100px;">
+                    {% else %}
+                        <img src="static/images/profile.png" class="profilepic" style="height:150px;width:150px;">
+                    {% endif%}
+                <br><br>
+                <div>
+                    <h3>{{user.name}}</h3>
+                    <p class="uk-margin-remove">{{user.email}}</p>
+                    <p class="uk-margin-remove">{{user.phone}}</p>
+                    <p class="uk-margin-remove-top"><span class="uk-badge round">{{user.gender}}</span> | <span class="uk-badge round">{{user.age}}</span> | <span class="uk-badge round">{{user.bloodgroup}}</span></p>
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="uk-card uk-card-default uk-width-expand uk-padding uk-margin-left ">
+                {% if user.type == "Donor" %}
+                <h3 class="uk-text-left">Requests</h3>
+                <div class="uk-height-medium" style="overflow:scroll;">
+                    <ul class="uk-list uk-list-divider uk-text-left uk-list-striped">
+                        {% for i in history %}
+                            <li>Blood requested by <b>{{ i.from }}</b> on <b>{{ i.date }}.</b>
+                            {% if i.accepted == "false" %}
+                                <form action="acceptrequest" method="post" style="display: inline;">
+                                    <input type="hidden" name="reqid" value="{{ i.id }}">
+                                    <input type="hidden" name="uid" value="{{ user.id }}">
+                                    <button class="uk-button uk-button-primary round uk-button-small uk-align-right">Accept</button>
+                                </form>
+                            {% endif %}
+                            {% if i.accepted == "true" %}
+                                <button class="uk-button uk-button-primary round uk-button-small uk-align-right" disabled>Accepted</button>
+                            {% endif %}
+                            </li>
+                        {% endfor %} 
+                        {% if not history %}
+                        <li> No Requests Available.</li>
+                        {% endif %}
+                        
+                        
+                    </ul>
+                </div>
+                {%endif%}
+                {% if user.type == "Reciever" %}
+                <h3 class="uk-text-left">History</h3>
+                <div class="uk-height-small" style="overflow:scroll;">
+                    <ul class="uk-list uk-list-divider uk-text-left uk-list-striped">
+                        
+                        {% for i in history %}
+                            {% if i.accepted == "true" %}
+                            <li>Blood Request accepted by <b>{{ i.from }}</b> on <b>{{ i.date }}.</b><a href="tel:+918383861754"><span class="uk-align-right" uk-icon="phone"></span></a></li>
+                            {% endif %}
+                            {% if i.accepted == "false" %}
+                            <li>Blood request to <b>{{ i.from }}</b> sent on  <b>{{ i.date }}</b>.<a href="#"><span class="uk-align-right" uk-icon="info"></span></a></li>
+                            {% endif %}
+                        {% endfor %}  
+                        {% if not history %}
+                        <li> No Request History Available.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <br><br>
+                
+                <button class="uk-button uk-button-primary uk-button-large round" uk-toggle="target: #findDonerModal">Find a Donor</button>
+                {%endif%}
+                
+                
+                </form>
+                <div id="findDonerModal" uk-modal>
+                    <div class="uk-modal-dialog uk-modal-body uk-margin-large-top round">
+                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                        <h2 class="uk-modal-title">Select Blood Group</h2>
+                        <div class="uk-modal-body ">
+                            <form action="/donorlist" method="post">
+                                <select class="uk-select round uk-form-width-medium" name="group" required>
+                                    <option disabled selected hidden value=""> Blood Group</option>
+                                    <option>A+</option>
+                                    <option>A-</option>
+                                    <option>B+</option>
+                                    <option>B-</option>
+                                    <option>O+</option>
+                                    <option>O-</option>
+                                    <option>AB+</option>
+                                    <option>AB-</option>
+                                </select>
+                                <button type="submit" class="uk-button uk-button-primary uk-button-medium round"><span uk-icon="arrow-right"></span></button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+        
+
+        
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "js/init.js" %}"></script>
+    <script src="{% static "js/script.js" %}"></script>
+    <script src="https://kit.fontawesome.com/e0a08b5c11.js" crossorigin="anonymous"></script>
+</body>
+</html>

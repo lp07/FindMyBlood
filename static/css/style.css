@@ -1,0 +1,39 @@
+.round{
+    border-radius: 7px !important; 
+}
+
+
+body{
+    background: url('/static/images/b.png');
+    background-size: cover;
+    height: 85vh;
+    padding-top: 15vh;
+}
+
+.profilepic{
+    height: 100px;
+    width: 100px;
+}
+
+.profile{
+    border-radius: 50px !important;
+}
+
+
+.datepicker{
+    padding: 0 7px;
+    background: #fff;
+    color: #666;
+    border:1px solid #e5e5e5;
+    transition: 0.2s ease-in-out;
+    transition-property: color, background-color, border;
+    font:inherit;
+    height: 40px;
+}
+
+.datepicker:focus{
+    outline: none;
+    background-color: #fff;
+    color: #666;
+    border-color: #951A23;
+}
